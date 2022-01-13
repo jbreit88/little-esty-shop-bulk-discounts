@@ -1,4 +1,5 @@
 class InvoicesController < ApplicationController
+  # before_action :github_facade, only: [:index, :show, :update]
 
   def index
     @merchant = Merchant.find(params[:merchant_id])

@@ -1,4 +1,6 @@
 class Admin::MerchantsController < ApplicationController
+  # before_action :github_facade, only: [:index, :show, :new, :create, :edit, :update]
+  
   def index
     @merchants = Merchant.all
   end
