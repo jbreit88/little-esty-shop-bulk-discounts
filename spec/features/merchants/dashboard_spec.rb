@@ -76,14 +76,6 @@ RSpec.describe 'Merchant Dashboard' do
   let!(:transaction_15) {invoice_15.transactions.create!(result: 'success')}
 
   before(:each) do
-    ## Repo Name
-    stub_request(:any, "https://api.github.com/repos/Sierra-T-9598/little-esty-shop").to_return(body: File.read('./tmp/github_repo_response_body.txt'), status: 200)
-    ## Contributors
-    stub_request(:any, "https://api.github.com/repos/Sierra-T-9598/little-esty-shop/contributors").to_return(body: File.read('./tmp/github_contributors_response_body.txt'), status: 200)
-    ## Commits
-    stub_request(:any, "https://api.github.com/repos/Sierra-T-9598/little-esty-shop/commits?per_page=100").to_return(body: File.read('./tmp/github_commits_response_body.txt'), status: 200)
-    ## Pull Requests
-    stub_request(:any, "https://api.github.com/repos/Sierra-T-9598/little-esty-shop/pulls?state=closed&per_page=100").to_return(body: File.read('./tmp/github_pull_requests_response_body.txt'), status: 200)
     visit "/merchants/#{merchant_1.id}/dashboard"
   end
 
