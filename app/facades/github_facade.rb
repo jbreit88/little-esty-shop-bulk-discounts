@@ -5,12 +5,12 @@ class GithubFacade
               :pull_requests,
               :service
 
-  def initialize
+  def initialize#(service = GithubService.new)
     @service = service
-    @repo = repo
-    @commits = commits
-    @contributors = contributors
-    @pull_requests = pull_requests
+    # @repo = repo
+    # @commits = commits
+    # @contributors = contributors
+    # @pull_requests = pull_requests
   end
 
   def repo
