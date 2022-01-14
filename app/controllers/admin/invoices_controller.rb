@@ -1,6 +1,6 @@
 class Admin::InvoicesController < ApplicationController
   # before_action :github_facade, only: [:index, :show, :update]
-  
+
   def index
     @invoices = Invoice.all
   end
