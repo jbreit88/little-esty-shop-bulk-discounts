@@ -1,4 +1,6 @@
 class ItemsController < ApplicationController
+  # before_action :github_facade, only: [:index, :show, :update, :new, :create, :edit]
+  
   def index
     @merchant = Merchant.find(params[:merchant_id])
     @items = @merchant.items
