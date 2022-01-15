@@ -1,9 +1,10 @@
 <h1>Bulk Discounts Index</h1>
 
+<%= link_to 'Create New Discount', new_merchant_bulk_discount_path(@merchant.id) %>
+
 <% @bulk_discounts.each do |bd| %>
   <div id="bulk-discount-<%= bd.id %>">
-    <h3><%= link_to bd.name, merchant_bulk_discounts_path(bd.merchant_id, bd.id) %>
-      <%= bd.name %></h3>
+    <h3><%= link_to bd.name, merchant_bulk_discount_path(@merchant.id, bd.id) %></h3>
     <ul>
       <li>Threshold: <%= bd.threshold %></li>
       <li>Percent Discount: <%= bd.percent_discount %></li>
