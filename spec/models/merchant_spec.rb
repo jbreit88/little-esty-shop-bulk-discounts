@@ -6,6 +6,7 @@ RSpec.describe Merchant do
     it { should have_many(:invoice_items).through(:items) }
     it { should have_many(:invoices).through(:invoice_items) }
     it { should have_many(:customers).through(:invoices) }
+    it { should have_many(:bulk_discounts) }
   end
 
   describe 'validations' do
@@ -115,7 +116,7 @@ RSpec.describe Merchant do
   describe 'instance methods' do
     describe '#top_5_customers' do
       it 'returns top 5 customers with most succesful transactions' do
-        expect(merchant_1.top_5_customers).to eq([customer_5, customer_4, customer_1, customer_2, customer_6])
+        expect(merchant_1.top_5_customers).to match_array([customer_5, customer_4, customer_1, customer_2, customer_6])
       end
     end
 
