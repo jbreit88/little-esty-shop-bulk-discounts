@@ -91,6 +91,12 @@ RSpec.describe 'Merchant Dashboard' do
     expect(page).to have_link("My invoices", href: merchant_invoices_path(merchant_1.id))
   end
 
+  scenario 'I see a link to view my discounts' do
+    visit merchant_dashboard_index_path(merchant_1.id)
+
+    expect(page).to have_link("Discounts", href: merchant_bulk_discounts_path(merchant_1.id))
+  end
+
   scenario 'visitor sees top 5 customers associated with merchant' do
     expect(page).to have_content(customer_1.first_name)
     expect(page).to have_content(customer_1.last_name)
