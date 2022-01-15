@@ -3,7 +3,7 @@
 </div>
 
 <div style="text-align: right; top:-10px;font-size:100%;">
-  <%= render partial: '/layouts/partials/merchant_dashboard_links' %><br>
+  <%= render partial: '/layouts/partials/merchant_dashboard_links' %> <%= link_to 'Discounts', merchant_bulk_discounts_path(@merchant.id) %><br>
 </div>
 
 <div style = "position:absolute; right:30px; top:200px">
