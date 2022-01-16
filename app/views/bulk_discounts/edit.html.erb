@@ -1,0 +1,12 @@
+<%= form_with model: [@merchant, @bulk_discount], local: true do |f| %>
+  <%= f.label :name %>
+  <%= f.text_field :name, required: :true %>
+
+  <%= f.label :percent_discount, 'Percent Discount' %>
+  <%= f.number_field :percent_discount, in: 1..100, required: :true %>
+
+  <%= f.label :threshold, "Min. Number of Items" %>
+  <%= f.number_field :threshold, required: :true %>
+
+  <%= f.submit 'Update Discount' %>
+<% end %>
