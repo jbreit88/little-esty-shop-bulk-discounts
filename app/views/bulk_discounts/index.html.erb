@@ -9,5 +9,6 @@
       <li>Threshold: <%= bd.threshold %></li>
       <li>Percent Discount: <%= bd.percent_discount %></li>
     </ul>
+    <%= link_to 'Delete Discount', merchant_bulk_discount_path(@merchant.id, bd.id), method: :delete %>
   </div>
 <% end %>
