@@ -69,5 +69,49 @@ RSpec.describe 'Merchant Bulk Discounts Index Page', type: :feature do
 
       expect(current_path).to eq(new_merchant_bulk_discount_path(merchant_1.id))
     end
+
+    context 'I see a delete link' do
+      scenario 'Next to each bulk discount is a link to delete it' do
+        within "#bulk-discount-#{fifteen_off_ten.id}" do
+          expect(page).to have_link('Delete Discount', href: merchant_bulk_discount_path(merchant_1.id, fifteen_off_ten.id))
+        end
+
+        within "#bulk-discount-#{twenty_off_fifteen.id}" do
+          expect(page).to have_link('Delete Discount', href: merchant_bulk_discount_path(merchant_1.id, twenty_off_fifteen.id))
+        end
+      end
+
+      scenario 'When I click this link it redirectws to the index page and the discount is no longer listed' do
+        expect(page).to have_content(fifteen_off_ten.name)
+        expect(page).to have_content(twenty_off_fifteen.name)
+
+        within "#bulk-discount-#{fifteen_off_ten.id}" do
+          click_link 'Delete Discount'
+        end
+
+        expect(current_path).to eq(merchant_bulk_discounts_path(merchant_1.id))
+        expect(page).to have_no_content(fifteen_off_ten.name)
+        expect(page).to have_content(twenty_off_fifteen.name)
+
+        within "#bulk-discount-#{twenty_off_fifteen.id}" do
+          click_link 'Delete Discount'
+        end
+
+        expect(current_path).to eq(merchant_bulk_discounts_path(merchant_1.id))
+        expect(page).to have_no_content(fifteen_off_ten.name)
+        expect(page).to have_no_content(twenty_off_fifteen.name)
+      end
+    end
+
+    #   No. 4 Merchant Bulk Discount Delete
+    #
+    # As a merchant
+    # When I visit my bulk discounts index
+    # Then next to each bulk discount I see a link to delete it
+    # When I click this link
+    # Then I am redirected back to the bulk discounts index page
+    # And I no longer see the discount listed
   end
+
+
 end
