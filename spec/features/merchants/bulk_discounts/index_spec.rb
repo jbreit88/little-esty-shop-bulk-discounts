@@ -102,16 +102,5 @@ RSpec.describe 'Merchant Bulk Discounts Index Page', type: :feature do
         expect(page).to have_no_content(twenty_off_fifteen.name)
       end
     end
-
-    #   No. 4 Merchant Bulk Discount Delete
-    #
-    # As a merchant
-    # When I visit my bulk discounts index
-    # Then next to each bulk discount I see a link to delete it
-    # When I click this link
-    # Then I am redirected back to the bulk discounts index page
-    # And I no longer see the discount listed
   end
-
-
 end
