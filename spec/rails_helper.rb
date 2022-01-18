@@ -56,6 +56,8 @@ RSpec.configure do |config|
     stub_request(:any, "https://api.github.com/repos/Sierra-T-9598/little-esty-shop/commits?per_page=100").to_return(body: File.read('./tmp/github_commits_response_body.txt'), status: 200)
     ## Pull Requests
     stub_request(:any, "https://api.github.com/repos/Sierra-T-9598/little-esty-shop/pulls?state=closed&per_page=100").to_return(body: File.read('./tmp/github_pull_requests_response_body.txt'), status: 200)
+
+    stub_request(:any, "https://date.nager.at/api/v2/NextPublicHolidays/us").to_return(body: File.read('./spec/support/holiday_api_response/holiday_next_365_day_repsonse.json'), status: 200)
   end
 
   # You can uncomment this line to turn off ActiveRecord support entirely.

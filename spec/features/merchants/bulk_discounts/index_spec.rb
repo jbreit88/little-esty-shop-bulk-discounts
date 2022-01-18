@@ -81,7 +81,7 @@ RSpec.describe 'Merchant Bulk Discounts Index Page', type: :feature do
         end
       end
 
-      scenario 'When I click this link it redirectws to the index page and the discount is no longer listed' do
+      scenario 'When I click this link it redirects to the index page and the discount is no longer listed' do
         expect(page).to have_content(fifteen_off_ten.name)
         expect(page).to have_content(twenty_off_fifteen.name)
 
@@ -100,6 +100,19 @@ RSpec.describe 'Merchant Bulk Discounts Index Page', type: :feature do
         expect(current_path).to eq(merchant_bulk_discounts_path(merchant_1.id))
         expect(page).to have_no_content(fifteen_off_ten.name)
         expect(page).to have_no_content(twenty_off_fifteen.name)
+      end
+    end
+
+    context 'I see an upcoming holidays section' do
+      scenario 'and i see the name and date of the next 3 upcoming holidays' do
+        expect(page).to have_content("Upcoming Holidays:")
+
+        within "#holidays" do
+          expect(page).to have_content("Presidents Day")
+          expect(page).to have_content("Good Friday")
+          expect(page).to have_content("Memorial Day")
+          expect(page).to have_no_content("Juneteenth")
+        end
       end
     end
   end
