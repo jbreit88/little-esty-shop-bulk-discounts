@@ -9,6 +9,10 @@ RSpec.describe 'Merchant Bulk Discounts Index Page', type: :feature do
   let!(:twenty_off_fifteen) {merchant_1.bulk_discounts.create!(name: "Twenty Off Fifteen", threshold: 15, percent_discount: 20)}
   let!(:five_off_ten) {merchant_2.bulk_discounts.create!(name: "Five Off Ten", threshold: 10, percent_discount: 5)}
 
+  before(:each) do
+    stub_request(:any, "https://date.nager.at/api/v2/NextPublicHolidays/us").to_return(body: File.read('./spec/support/holiday_api_response/holiday_next_365_day_repsonse.json'), status: 200)
+  end
+
   context 'As a merchant when I visit my dashboard' do
     scenario 'I see a link to view my discounts' do
       visit merchant_dashboard_index_path(merchant_1.id)
@@ -81,7 +85,7 @@ RSpec.describe 'Merchant Bulk Discounts Index Page', type: :feature do
         end
       end
 
-      scenario 'When I click this link it redirectws to the index page and the discount is no longer listed' do
+      scenario 'When I click this link it redirects to the index page and the discount is no longer listed' do
         expect(page).to have_content(fifteen_off_ten.name)
         expect(page).to have_content(twenty_off_fifteen.name)
 
@@ -100,6 +104,20 @@ RSpec.describe 'Merchant Bulk Discounts Index Page', type: :feature do
         expect(current_path).to eq(merchant_bulk_discounts_path(merchant_1.id))
         expect(page).to have_no_content(fifteen_off_ten.name)
         expect(page).to have_no_content(twenty_off_fifteen.name)
+      end
+    end
+
+    context 'I see an upcoming holidays section' do
+      scenario 'and i see the name and date of the next 3 upcoming holidays' do
+        save_and_open_page
+        expect(page).to have_content("Upcoming Holidays:")
+
+        within "#holidays" do
+          expect(page).to have_content("Presidents Day")
+          expect(page).to have_content("Good Friday")
+          expect(page).to have_content("Memorial Day")
+          expect(page).to have_no_content("Juneteenth")
+        end
       end
     end
   end
