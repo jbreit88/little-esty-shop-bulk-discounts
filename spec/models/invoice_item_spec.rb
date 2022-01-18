@@ -38,4 +38,35 @@ RSpec.describe InvoiceItem do
       end
     end
   end
+
+  describe 'instance methods' do
+    describe '#find_bulk_discount' do
+      it 'returns the bulk discount with the highest percentage if there is one for an invoice item' do
+        invoice_2 = customer_1.invoices.create!(status: 1, created_at: '2012-03-25 09:54:09')
+
+        invoice_item_4 = InvoiceItem.create!(quantity: 11, unit_price: item_1.unit_price, item_id: item_1.id, invoice_id: invoice_2.id, status: 0)
+        invoice_item_5 = InvoiceItem.create!(quantity: 1, unit_price: item_1.unit_price, item_id: item_1.id, invoice_id: invoice_2.id, status: 0)
+
+        bulk_discount_1 = merchant_1.bulk_discounts.create!(name: 'Ten off Ten', threshold: 10, percent_discount: 10)
+
+
+        expect(invoice_item_4.find_bulk_discount).to eq(bulk_discount_1)
+
+        expect(invoice_item_5.find_bulk_discount).to eq(nil)
+      end
+
+      it 'returns the highest percentage discount when more than one applies' do
+        invoice_2 = customer_1.invoices.create!(status: 1, created_at: '2012-03-25 09:54:09')
+
+        invoice_item_4 = InvoiceItem.create!(quantity: 11, unit_price: item_1.unit_price, item_id: item_1.id, invoice_id: invoice_2.id, status: 0)
+        invoice_item_5 = InvoiceItem.create!(quantity: 6, unit_price: item_1.unit_price, item_id: item_1.id, invoice_id: invoice_2.id, status: 0)
+
+        bulk_discount_1 = merchant_1.bulk_discounts.create!(name: 'Ten off Ten', threshold: 10, percent_discount: 10)
+        bulk_discount_2 = merchant_1.bulk_discounts.create!(name: 'Five off Five', threshold: 5, percent_discount: 5)
+
+        expect(invoice_item_4.find_bulk_discount).to eq(bulk_discount_1)
+        expect(invoice_item_5.find_bulk_discount).to eq(bulk_discount_2)
+      end
+    end
+  end
 end
