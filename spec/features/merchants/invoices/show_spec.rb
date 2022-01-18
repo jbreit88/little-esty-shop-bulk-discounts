@@ -154,7 +154,6 @@ RSpec.describe 'Merchant Invoice Show Page', type: :feature do
     end
 
     scenario 'next to each invoice item I see a link to the bulk discount show page that was applied if any' do
-      save_and_open_page
       within "#item#{item_1.id}" do
         expect(page).to have_link(bulk_discount_1.name, href: merchant_bulk_discount_path(merchant_1.id, bulk_discount_1.id))
         expect(page).to have_no_content('None')
@@ -166,10 +165,4 @@ RSpec.describe 'Merchant Invoice Show Page', type: :feature do
       end
     end
   end
-
-#   No. 8 Merchant Invoice Show Page: Link to applied discounts
-#
-# As a merchant
-# When I visit my merchant invoice show page
-# Next to each invoice item I see a link to the show page for the bulk discount that was applied (if any)
 end

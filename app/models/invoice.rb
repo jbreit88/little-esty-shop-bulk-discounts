@@ -27,11 +27,19 @@ class Invoice < ApplicationRecord
   end
 
   def total_discounts_by_merchant(merchant_id)
-    # require "pry"; binding.pry
     invoice_items.joins(:bulk_discounts)
                  .select("invoice_items.id, max(invoice_items.unit_price * invoice_items.quantity * (bulk_discounts.percent_discount / 100.00)) as total_discount")
                  .where("invoice_items.quantity >= bulk_discounts.threshold")
                  .where("bulk_discounts.merchant_id = ?", merchant_id)
+                 .group("invoice_items.id")
+                 .order("total_discount desc")
+                 .sum(&:"total_discount")
+  end
+
+  def total_invoice_discounts
+    invoice_items.joins(:bulk_discounts)
+                 .select("invoice_items.id, max(invoice_items.unit_price * invoice_items.quantity * (bulk_discounts.percent_discount / 100.00)) as total_discount")
+                 .where("invoice_items.quantity >= bulk_discounts.threshold")
                  .group("invoice_items.id")
                  .order("total_discount desc")
                  .sum(&:"total_discount")

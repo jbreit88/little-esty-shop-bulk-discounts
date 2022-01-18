@@ -98,11 +98,37 @@ RSpec.describe Invoice do
         invoice_item_8 = InvoiceItem.create!(quantity: 10, unit_price: item_7.unit_price, item_id: item_7.id, invoice_id: invoice_4.id, status: 0)
 
         bulk_discount_1 = merchant_3.bulk_discounts.create!(name: "Ten off Ten", threshold: 10, percent_discount: 10)
-        bulk_discount_1 = merchant_4.bulk_discounts.create!(name: "Ten off Ten", threshold: 10, percent_discount: 10)
+        bulk_discount_2 = merchant_4.bulk_discounts.create!(name: "Five off Five", threshold: 5, percent_discount: 5)
 
         total_discount = invoice_item_6.unit_price * invoice_item_6.quantity * (bulk_discount_1.percent_discount / 100.00)
 
         expect(invoice_4.total_discounts_by_merchant(merchant_3.id)).to eq(total_discount)
+      end
+    end
+
+    describe '#total_invoice_discounts' do
+      it 'returns the discounted value of all invoice items with discounts on an invoice' do
+        merchant_3 = Merchant.create!(name: 'Ron Swanson', status: 0)
+        merchant_4 = Merchant.create!(name: 'Mike Cheney', status: 0)
+
+        item_5 = merchant_3.items.create!(name: "Necklace", description: "A thing around your neck", unit_price: 2000, status: 0)
+        item_6 = merchant_3.items.create!(name: "Bracelet", description: "A thing around your wrist", unit_price: 900, status: 0)
+        item_7 = merchant_4.items.create!(name: "Earrings", description: "These go through your ears", unit_price: 1500, status: 1)
+
+        customer_2 = Customer.create!(first_name: "Billy", last_name: "Joel")
+
+        invoice_4 = customer_2.invoices.create!(status: 1, created_at: '2012-03-25 09:54:09')
+
+        invoice_item_6 = InvoiceItem.create!(item_id: item_5.id, invoice_id: invoice_4.id, unit_price: item_5.unit_price, quantity: 2, status: 0)
+        invoice_item_7 = InvoiceItem.create!(item_id: item_6.id, invoice_id: invoice_4.id, unit_price: item_6.unit_price, quantity: 26, status: 0)
+        invoice_item_8 = InvoiceItem.create!(item_id: item_7.id, invoice_id: invoice_4.id, unit_price: item_7.unit_price, quantity: 6, status: 0)
+
+        bulk_discount_1 = merchant_3.bulk_discounts.create!(name: "Ten off Ten", threshold: 10, percent_discount: 10)
+        bulk_discount_2 = merchant_4.bulk_discounts.create!(name: "Five off Five", threshold: 5, percent_discount: 5)
+
+        total_discounts_invoice_4 = (invoice_item_7.unit_price * invoice_item_7.quantity * (bulk_discount_1.percent_discount / 100.00)) + (invoice_item_8.unit_price * invoice_item_8.quantity * (bulk_discount_2.percent_discount / 100.00)).to_f
+
+        expect(invoice_4.total_invoice_discounts).to eq(total_discounts_invoice_4.to_f)
       end
     end
   end
