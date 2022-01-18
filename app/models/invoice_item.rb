@@ -10,6 +10,8 @@ class InvoiceItem < ApplicationRecord
   belongs_to :invoice
   belongs_to :item
 
+  has_many :bulk_discounts, through: :item
+
   def self.revenue
       sum('quantity * unit_price')
   end

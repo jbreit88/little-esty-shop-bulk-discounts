@@ -116,3 +116,41 @@ RSpec.describe 'Merchant Invoice Show Page', type: :feature do
     end
   end
 end
+
+RSpec.describe 'Merchant Invoice Show Page', type: :feature do
+  let!(:merchant_1) {Merchant.create!(name: 'Ron Swanson')}
+  let!(:merchant_2) {Merchant.create!(name: 'Deb Millhouse')}
+
+  let!(:item_1) {merchant_1.items.create!(name: "Necklace", description: "A thing around your neck", unit_price: 150, status: 1)}
+  let!(:item_2) {merchant_1.items.create!(name: "Bracelet", description: "A thing around your wrist", unit_price: 300, status: 0)}
+  let!(:item_3) {merchant_2.items.create!(name: "Earrings", description: "A thing around your ears", unit_price: 220, status: 0)}
+
+
+  let!(:customer_1) {Customer.create!(first_name: "Billy", last_name: "Joel")}
+
+  let!(:invoice_1)  {customer_1.invoices.create!(status: 1, created_at: '2012-03-25 09:54:09')}
+
+  let!(:invoice_item_1) {InvoiceItem.create!(quantity: 10, unit_price: item_1.unit_price, item_id: item_1.id, invoice_id: invoice_1.id, status: 0)}
+  let!(:invoice_item_2) {InvoiceItem.create!(quantity: 5, unit_price: item_2.unit_price, item_id: item_2.id, invoice_id: invoice_1.id, status: 1)}
+  let!(:invoice_item_3) {InvoiceItem.create!(quantity: 10, unit_price: item_3.unit_price, item_id: item_3.id, invoice_id: invoice_1.id, status: 2)}
+
+  let!(:bulk_discount_1) {merchant_1.bulk_discounts.create!(name: "Ten Off Ten", threshold: 10, percent_discount: 10)}
+
+  before (:each) do
+    visit merchant_invoice_path(merchant_1.id, invoice_1.id)
+  end
+
+  context 'As a merchant when I visit an invoice show page' do
+    scenario 'I see the total revenue for my merchant without discounts' do
+      total_merchant_revenue = (invoice_item_1.unit_price * invoice_item_1.quantity) + (invoice_item_2.unit_price * invoice_item_2.quantity)
+
+      expect(page).to have_content(total_merchant_revenue.to_f/100)
+    end
+
+    scenario 'I see the total discount for my merchant including bulk discounts' do
+      total_merchant_discounted_revenue = invoice_1.total_revenue_by_merchant(merchant_1.id) - invoice_1.total_discounts_by_merchant(merchant_1.id)
+
+      expect(page).to have_content(total_merchant_discounted_revenue.to_f/100)
+    end
+  end
+end
