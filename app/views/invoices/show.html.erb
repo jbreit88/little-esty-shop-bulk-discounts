@@ -17,6 +17,13 @@
       <p>Quantity: <%= invoice_item.quantity %> </p>
       <p>Unit Price: $<%= invoice_item.unit_price.to_f/100 %> </p>
       <p>Invoice Status: <%= invoice_item.status %> </p>
+
+      <% if invoice_item.find_bulk_discount != nil %>
+        <p>Bulk Discount: <%= link_to invoice_item.find_bulk_discount.name, merchant_bulk_discount_path(@merchant.id, invoice_item.find_bulk_discount.id) %></p>
+      <% else %>
+        <p>Bulk Discount: None</p>
+      <% end %>
+
       <p> <%= form_with url: merchant_invoice_path(item.merchant_id, @invoice.id), method: :patch, local: true do |f| %>
         <%= f.hidden_field :invoice_item_id, value: invoice_item.id %>
         <%= f.label :status, "Status"  %>
