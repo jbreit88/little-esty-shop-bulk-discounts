@@ -4,6 +4,7 @@
 <p>Invoice Status: <%= @invoice.status %></p>
 <p>Created On: <%= @invoice.creation_date_formatted %></p>
 <p>Total Revenue: $<%= @total_revenue.to_f/100 %> </p>
+<p>Total Discounted Revenue: $<%= @total_revenue.to_f/100 - @invoice.total_discounts_by_merchant(@merchant.id).to_f/100 %></p>
 
 <h3>Customer Information:</h3>
 <p>Name: <%= @invoice.customer.first_name %> <%= @invoice.customer.last_name %></p>
@@ -26,4 +27,3 @@
     </p>
   </div>
 <% end %>
-
