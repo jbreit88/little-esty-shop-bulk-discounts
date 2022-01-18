@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-
+  # Routes are appropriately RESTful and are limited only to the actions available in controllers
   namespace :admin do
     resources :dashboard, only: [:index]
     resources :merchants, only: [:index, :show, :new, :create, :edit, :update]
