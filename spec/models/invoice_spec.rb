@@ -6,6 +6,8 @@ RSpec.describe Invoice do
     it { should have_many :transactions}
     it { should have_many :invoice_items }
     it { should have_many(:items).through(:invoice_items) }
+    it { should have_many(:merchants).through(:items) }
+    it { should have_many(:bulk_discounts).through(:merchants) }
   end
 
   describe 'validations' do
@@ -52,6 +54,55 @@ RSpec.describe Invoice do
         total_revenue = (invoice_item_1.unit_price * invoice_item_1.quantity) + (invoice_item_2.unit_price * invoice_item_2.quantity)
 
         expect(invoice_1.total_revenue_by_merchant(merchant_1.id)).to eq(total_revenue)
+      end
+    end
+
+    describe '#total_discounted_by_merchant' do
+      it 'returns the total revenue for a merchant by invoice with bulk discounts applied' do
+        merchant_3 = Merchant.create!(name: 'Ron Swanson')
+        merchant_4 = Merchant.create!(name: 'Bella Donna')
+
+        item_5 = merchant_3.items.create!(name: "Necklace", description: "A thing around your neck", unit_price: 350)
+        item_6 = merchant_3.items.create!(name: "Bracelet", description: "A thing around your wrist", unit_price: 200)
+        item_7 = merchant_4.items.create!(name: "Necklace", description: "A thing around your neck", unit_price: 1000)
+
+        customer_2 = Customer.create!(first_name: "Billy", last_name: "Joel")
+
+        invoice_4 = customer_2.invoices.create!(status: 1, created_at: '2012-03-25 09:54:09')
+
+        invoice_item_6 = InvoiceItem.create!(quantity: 10, unit_price: item_5.unit_price, item_id: item_5.id, invoice_id: invoice_4.id, status: 0)
+        invoice_item_7 = InvoiceItem.create!(quantity: 5, unit_price: item_6.unit_price, item_id: item_6.id, invoice_id: invoice_4.id, status: 0)
+        invoice_item_8 = InvoiceItem.create!(quantity: 10, unit_price: item_7.unit_price, item_id: item_7.id, invoice_id: invoice_4.id, status: 0)
+
+        bulk_discount_1 = merchant_3.bulk_discounts.create!(name: "Ten off Ten", threshold: 10, percent_discount: 10)
+
+        total_discount = invoice_item_6.unit_price * invoice_item_6.quantity * (bulk_discount_1.percent_discount / 100.00)
+
+        expect(invoice_4.total_discounts_by_merchant(merchant_3.id)).to eq(total_discount)
+      end
+
+      it "does not take into account items from other merchants" do
+        merchant_3 = Merchant.create!(name: 'Ron Swanson')
+        merchant_4 = Merchant.create!(name: 'Bella Donna')
+
+        item_5 = merchant_3.items.create!(name: "Necklace", description: "A thing around your neck", unit_price: 350)
+        item_6 = merchant_3.items.create!(name: "Bracelet", description: "A thing around your wrist", unit_price: 200)
+        item_7 = merchant_4.items.create!(name: "Necklace", description: "A thing around your neck", unit_price: 1000)
+
+        customer_2 = Customer.create!(first_name: "Billy", last_name: "Joel")
+
+        invoice_4 = customer_2.invoices.create!(status: 1, created_at: '2012-03-25 09:54:09')
+
+        invoice_item_6 = InvoiceItem.create!(quantity: 10, unit_price: item_5.unit_price, item_id: item_5.id, invoice_id: invoice_4.id, status: 0)
+        invoice_item_7 = InvoiceItem.create!(quantity: 5, unit_price: item_6.unit_price, item_id: item_6.id, invoice_id: invoice_4.id, status: 0)
+        invoice_item_8 = InvoiceItem.create!(quantity: 10, unit_price: item_7.unit_price, item_id: item_7.id, invoice_id: invoice_4.id, status: 0)
+
+        bulk_discount_1 = merchant_3.bulk_discounts.create!(name: "Ten off Ten", threshold: 10, percent_discount: 10)
+        bulk_discount_1 = merchant_4.bulk_discounts.create!(name: "Ten off Ten", threshold: 10, percent_discount: 10)
+
+        total_discount = invoice_item_6.unit_price * invoice_item_6.quantity * (bulk_discount_1.percent_discount / 100.00)
+
+        expect(invoice_4.total_discounts_by_merchant(merchant_3.id)).to eq(total_discount)
       end
     end
   end
