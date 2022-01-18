@@ -51,7 +51,7 @@ RSpec.describe InvoiceItem do
 
 
         expect(invoice_item_4.find_bulk_discount).to eq(bulk_discount_1)
-
+        # Sadpath Testing
         expect(invoice_item_5.find_bulk_discount).to eq(nil)
       end
 
@@ -64,6 +64,7 @@ RSpec.describe InvoiceItem do
         bulk_discount_1 = merchant_1.bulk_discounts.create!(name: 'Ten off Ten', threshold: 10, percent_discount: 10)
         bulk_discount_2 = merchant_1.bulk_discounts.create!(name: 'Five off Five', threshold: 5, percent_discount: 5)
 
+        #Edgecase Testing
         expect(invoice_item_4.find_bulk_discount).to eq(bulk_discount_1)
         expect(invoice_item_5.find_bulk_discount).to eq(bulk_discount_2)
       end

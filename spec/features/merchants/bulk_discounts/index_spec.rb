@@ -38,7 +38,7 @@ RSpec.describe 'Merchant Bulk Discounts Index Page', type: :feature do
         expect(page).to have_content(twenty_off_fifteen.percent_discount)
         expect(page).to have_content(twenty_off_fifteen.threshold)
       end
-
+      # Sadpath Testing
       expect(page).to have_no_content(five_off_ten.name)
     end
 
@@ -111,6 +111,7 @@ RSpec.describe 'Merchant Bulk Discounts Index Page', type: :feature do
           expect(page).to have_content("Presidents Day")
           expect(page).to have_content("Good Friday")
           expect(page).to have_content("Memorial Day")
+          # Sadpath Testing
           expect(page).to have_no_content("Juneteenth")
         end
       end

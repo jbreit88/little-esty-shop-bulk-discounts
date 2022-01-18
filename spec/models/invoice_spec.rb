@@ -101,7 +101,7 @@ RSpec.describe Invoice do
         bulk_discount_2 = merchant_4.bulk_discounts.create!(name: "Five off Five", threshold: 5, percent_discount: 5)
 
         total_discount = invoice_item_6.unit_price * invoice_item_6.quantity * (bulk_discount_1.percent_discount / 100.00)
-
+        #Edgecase Testing
         expect(invoice_4.total_discounts_by_merchant(merchant_3.id)).to eq(total_discount)
       end
     end

@@ -160,6 +160,7 @@ RSpec.describe 'Merchant Invoice Show Page', type: :feature do
       end
 
       within "#item#{item_2.id}" do
+        # Sadpath Testing
         expect(page).to_not have_link(bulk_discount_1.name, href: merchant_bulk_discount_path(merchant_1.id, bulk_discount_1.id))
         expect(page).to have_content("None")
       end

@@ -17,6 +17,7 @@ RSpec.describe 'Bulk Discount Show Page', type: :feature do
       expect(page).to have_content(fifteen_off_ten.percent_discount)
       expect(page).to have_content(fifteen_off_ten.threshold)
 
+      # Sadpath Testing
       expect(page).to have_no_content(twenty_off_fifteen.name)
     end
 
