@@ -2,7 +2,8 @@
 <head>
   <style>
     #holidays {
-      position: absolute;
+      position: relative;
+      float: right;
       top: 80px;
       right: 0;
       border: 3px solid black;
@@ -16,6 +17,9 @@
 <body>
 
   <h1>Bulk Discounts Index</h1>
+  <div style="text-align: right; top:-10px;font-size:100%;">
+    <%= render partial: '/layouts/partials/merchant_dashboard_links' %> <%= link_to 'Discounts', merchant_bulk_discounts_path(@merchant.id) %><br>
+  </div>
 
   <div id="holidays">
     <h3>Upcoming Holidays:</h3>
