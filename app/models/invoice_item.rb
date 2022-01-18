@@ -17,6 +17,7 @@ class InvoiceItem < ApplicationRecord
   end
 
   def find_bulk_discount
+    # ActiveRecord
     bulk_discounts.where("bulk_discounts.threshold <= ?", quantity)
     .order(percent_discount: :desc)
     .first

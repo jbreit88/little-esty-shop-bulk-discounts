@@ -27,6 +27,7 @@ RSpec.describe 'Bulk Discount Create Page', type: :feature do
     end
 
     scenario 'When I fill it in with invalid input it does not persist to the database' do
+      # Edgecase Testing
       fill_in 'Name', with: 'Fifty off Fifty'
       fill_in 'Percent Discount', with: '150'
       fill_in 'Min. Number of Items', with: '50'
