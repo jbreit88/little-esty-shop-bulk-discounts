@@ -109,7 +109,6 @@ RSpec.describe 'Merchant Bulk Discounts Index Page', type: :feature do
 
     context 'I see an upcoming holidays section' do
       scenario 'and i see the name and date of the next 3 upcoming holidays' do
-        save_and_open_page
         expect(page).to have_content("Upcoming Holidays:")
 
         within "#holidays" do
