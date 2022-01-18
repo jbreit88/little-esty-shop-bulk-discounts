@@ -9,10 +9,6 @@ RSpec.describe 'Merchant Bulk Discounts Index Page', type: :feature do
   let!(:twenty_off_fifteen) {merchant_1.bulk_discounts.create!(name: "Twenty Off Fifteen", threshold: 15, percent_discount: 20)}
   let!(:five_off_ten) {merchant_2.bulk_discounts.create!(name: "Five Off Ten", threshold: 10, percent_discount: 5)}
 
-  before(:each) do
-    stub_request(:any, "https://date.nager.at/api/v2/NextPublicHolidays/us").to_return(body: File.read('./spec/support/holiday_api_response/holiday_next_365_day_repsonse.json'), status: 200)
-  end
-
   context 'As a merchant when I visit my dashboard' do
     scenario 'I see a link to view my discounts' do
       visit merchant_dashboard_index_path(merchant_1.id)
