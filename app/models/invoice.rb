@@ -27,6 +27,7 @@ class Invoice < ApplicationRecord
   end
 
   def total_discounts_by_merchant(merchant_id)
+    # ActiveRecord
     invoice_items.joins(:bulk_discounts)
                  .select("invoice_items.id, max(invoice_items.unit_price * invoice_items.quantity * (bulk_discounts.percent_discount / 100.00)) as total_discount")
                  .where("invoice_items.quantity >= bulk_discounts.threshold")
