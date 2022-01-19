@@ -7,6 +7,7 @@ class Merchant < ApplicationRecord
   has_many :transactions, through: :invoices
   has_many :customers, through: :invoices
   has_many :bulk_discounts
+  has_many :holiday_bulk_discounts
 
   validates_presence_of :name
 
