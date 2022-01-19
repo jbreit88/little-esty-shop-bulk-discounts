@@ -4,13 +4,13 @@
   <%= f.hidden_field :holiday, value: @holiday_name%>
 
   <%= f.label :name, "Discount Name" %>
-  <%= f.text_field :name, required: :true, value: "#{@holiday_name} Discount" %><br>
+  <%= f.text_field :name, required: :true, value: "#{@holiday_name} Discount" %><br><br>
 
   <%= f.label :percent_discount, 'Percentage Discount' %>
-  <%= f.number_field :percent_discount, in: 1..100, required: :true, value: 30 %><br>
+  <%= f.number_field :percent_discount, in: 1..100, required: :true, value: 30 %><br><br>
 
   <%= f.label :threshold, "Quantity Threshold" %>
-  <%= f.number_field :threshold, required: :true, value: 2 %><br>
+  <%= f.number_field :threshold, required: :true, value: 2 %><br><br>
 
   <%= f.submit 'Create Holiday Discount' %><br>
 <% end %>
