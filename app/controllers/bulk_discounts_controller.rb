@@ -43,7 +43,7 @@ class BulkDiscountsController < ApplicationController
   private
 
   def bulk_discount_params
-    params.require(:bulk_discount).permit(:name, :threshold, :percent_discount)
+    params.permit(:name, :threshold, :percent_discount)
   end
 
   def holiday_facade
