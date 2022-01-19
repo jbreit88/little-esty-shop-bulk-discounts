@@ -2,44 +2,66 @@
 <head>
   <style>
     #holidays {
-      position: relative;
       float: right;
+      width: 45%;
       top: 80px;
       right: 0;
       border: 3px solid black;
       padding: 15px;
       background-color: gray;
-      opacity: 0.7;
+    }
+
+    #all-discounts {
+      float: left;
+      width: 45%;
+      top: 80px;
+      border: 3px solid black;
+      padding: 15px;
+      background-color: gray;
     }
   </style>
 </head>
 
 <body>
 
-  <h1>Bulk Discounts Index</h1>
   <div style="text-align: right; top:-10px;font-size:100%;">
     <%= render partial: '/layouts/partials/merchant_dashboard_links' %> <%= link_to 'Discounts', merchant_bulk_discounts_path(@merchant.id) %><br>
   </div>
 
-  <div id="holidays">
-    <h3>Upcoming Holidays:</h3>
-    <% @holiday_facade.holidays.first(3).each do |holiday| %>
-      <p> <%= holiday.name %> - <%= holiday.date %></p>
+  <h1>Bulk Discounts Index</h1>
+
+  <p><%= link_to 'Create New Discount', new_merchant_bulk_discount_path(@merchant.id) %></p>
+
+  <div id="all-discounts">
+    <h2>Normal Discounts:</h2>
+    <% @bulk_discounts.each do |bd| %>
+      <div id="bulk-discount-<%= bd.id %>">
+        <h3><%= link_to bd.name, merchant_bulk_discount_path(@merchant.id, bd.id) %></h3>
+        <ul>
+          <li>Threshold: <%= bd.threshold %></li>
+          <li>Percent Discount: <%= bd.percent_discount %></li>
+        </ul>
+        <%= link_to 'Delete Discount', merchant_bulk_discount_path(@merchant.id, bd.id), method: :delete %>
+      </div>
     <% end %>
   </div>
 
-  <%= link_to 'Create New Discount', new_merchant_bulk_discount_path(@merchant.id) %>
-
-  <% @bulk_discounts.each do |bd| %>
-    <div id="bulk-discount-<%= bd.id %>">
-      <h3><%= link_to bd.name, merchant_bulk_discount_path(@merchant.id, bd.id) %></h3>
-      <ul>
-        <li>Threshold: <%= bd.threshold %></li>
-        <li>Percent Discount: <%= bd.percent_discount %></li>
-      </ul>
-      <%= link_to 'Delete Discount', merchant_bulk_discount_path(@merchant.id, bd.id), method: :delete %>
+  <div id="holidays">
+    <div id="holiday-discounts">
+      <h2>Holiday Discounts:</h2>
+      <h3>Upcoming Holidays:</h3>
+      <% @holiday_facade.holidays.first(3).each do |holiday| %>
+        <% if @holiday_bulk_discounts.existing_holiday_discounts.include?(holiday.name) %>
+          <div id="holiday-discounts-<%= holiday.date %>">
+            <p> <%= holiday.name %> <%= link_to "View Holiday Discount", merchant_bulk_discount_path(@merchant.id, HolidayBulkDiscount.find_by(holiday: holiday.name).id), method: :get, local: true %> </p>
+          </div>
+        <% else %>
+          <div id="holiday-discounts-<%= holiday.date %>">
+            <p> <%= holiday.name %> - <%= button_to "Create Discount", new_merchant_holiday_bulk_discount_path(@merchant.id), method: :get, params: {holiday_name: holiday.name}, local: true, display: 'inline' %> </p>
+          </div>
+        <% end %>
+      <% end %><br><br>
     </div>
-  <% end %>
-
+  </div>
 </body>
 </html>

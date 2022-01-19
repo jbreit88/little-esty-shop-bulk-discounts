@@ -101,6 +101,123 @@ RSpec.describe 'Merchant Bulk Discounts Index Page', type: :feature do
         expect(page).to have_no_content(fifteen_off_ten.name)
         expect(page).to have_no_content(twenty_off_fifteen.name)
       end
+
+      context 'Holiday Discounts' do
+        scenario 'I see a holiday discounts section' do
+          within "#holiday-discounts" do
+            expect(page).to have_content("Holiday Discounts")
+          end
+        end
+
+        scenario 'I see a Create Discount button next to each of the three upcoming holidays' do
+          within "#holiday-discounts" do
+            within "#holiday-discounts-2022-02-21" do
+              expect(page).to have_content("Presidents Day")
+              expect(page).to have_button("Create Discount")
+            end
+
+            within "#holiday-discounts-2022-04-15" do
+              expect(page).to have_content("Good Friday")
+              expect(page).to have_button("Create Discount")
+            end
+
+            within "#holiday-discounts-2022-05-30" do
+              expect(page).to have_content("Memorial Day")
+              expect(page).to have_button("Create Discount")
+            end
+          end
+        end
+
+        scenario 'When I click the button I am taken to a new discounts form with fields autopopulated' do
+          within "#holiday-discounts-2022-02-21" do
+            click_button "Create Discount"
+          end
+
+          expect(current_path).to eq(new_merchant_holiday_bulk_discount_path(merchant_1.id))
+
+          expect(page).to have_field("Discount Name", with: "Presidents Day Discount")
+          expect(page).to have_field("Percentage Discount", with: "30")
+          expect(page).to have_field("Quantity Threshold", with: "2")
+        end
+
+        scenario 'The form can be submitted as is' do
+          within "#holiday-discounts-2022-02-21" do
+            click_button "Create Discount"
+          end
+
+          click_button "Create Holiday Discount"
+
+          within "#all-discounts" do
+            expect(page).to have_content('Presidents Day Discount')
+          end
+        end
+
+        scenario 'The form can be altered and submitted' do
+          within "#holiday-discounts-2022-02-21" do
+            click_button "Create Discount"
+          end
+
+          fill_in "Discount Name", with: "Perzy Dent Day Sale"
+          fill_in "Percentage Discount", with: "20"
+          fill_in "Quantity Threshold", with: "10"
+
+          click_button "Create Holiday Discount"
+
+          within "#all-discounts" do
+            expect(page).to have_link("Perzy Dent Day Sale")
+
+            click_link "Perzy Dent Day Sale"
+          end
+
+          expect(page).to have_content(20)
+          expect(page).to have_content(10)
+        end
+
+        scenario 'The form redirects to the index page and displays the newly created discount' do
+          within "#holiday-discounts-2022-02-21" do
+            click_button "Create Discount"
+          end
+
+          click_button "Create Holiday Discount"
+
+          expect(current_path).to eq(merchant_bulk_discounts_path(merchant_1.id))
+        end
+
+        scenario 'If I input invalid data into the form, it will not persist to the database' do
+          # Sadpath Testing
+          within "#holiday-discounts-2022-02-21" do
+            click_button "Create Discount"
+          end
+
+          fill_in "Discount Name", with: "Perzy Dent Day Sale"
+          fill_in "Percentage Discount", with: "150"
+
+          click_button "Create Holiday Discount"
+
+          within "#holiday-discounts" do
+            expect(page).to have_no_content("Perzy Dent Day Sale")
+          end
+        end
+
+        scenario 'After creating a discount for that holiday I see a view discount link instead of create discount button' do
+          within "#holiday-discounts-2022-02-21" do
+            click_button "Create Discount"
+          end
+
+          fill_in "Discount Name", with: "Perzy Dent Day Sale"
+
+          click_button "Create Holiday Discount"
+
+          within "#holiday-discounts" do
+            expect(page).to have_link("View Holiday Discount")
+            click_link "View Holiday Discount"
+          end
+
+          expect(page).to have_content("Perzy Dent Day Sale")
+          expect(page).to have_content("Quantity Threshold: 2")
+          expect(page).to have_content("Percentage Discount: 30")
+        end
+      end
     end
 
     context 'I see an upcoming holidays section' do

@@ -4,6 +4,7 @@ class BulkDiscountsController < ApplicationController
   def index
     @merchant = Merchant.find(params[:merchant_id])
     @bulk_discounts = BulkDiscount.where(merchant_id: params[:merchant_id])
+    @holiday_bulk_discounts = HolidayBulkDiscount.where(merchant_id: params[:merchant_id])
   end
 
   def show
@@ -19,7 +20,7 @@ class BulkDiscountsController < ApplicationController
 
     redirect_to merchant_bulk_discounts_path(merchant.id)
   end
-  
+
   def edit
     @bulk_discount = BulkDiscount.find(params[:id])
     @merchant = Merchant.find(params[:merchant_id])

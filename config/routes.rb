@@ -11,5 +11,6 @@ Rails.application.routes.draw do
     resources :invoices, only: [:index, :show, :update]
     resources :dashboard, only: [:index]
     resources :bulk_discounts, only: [:index, :show, :new, :create, :destroy, :edit, :update]
+    resources :holiday_bulk_discounts, only: [:new, :create]
   end
 end
