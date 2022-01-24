@@ -23,7 +23,7 @@ require 'rspec/rails'
 # require only the support files necessary.
 #
 ##### This line has been uncommented so that WebMock will work.
-Dir[Rails.root.join('spec', 'support', '**', '*.rb')].sort.each { |f| require f }
+# Dir[Rails.root.join('spec', 'support', '**', '*.rb')].sort.each { |f| require f }
 
 # Checks for pending migrations and applies them before tests are run.
 # If you are not using ActiveRecord, you can remove these lines.
@@ -48,16 +48,19 @@ RSpec.configure do |config|
     # allow(GithubService).to receive(:commits).and_return(JSON.parse(File.read('./tmp/github_commits_response_body.txt'), symbolize_names: true))
     # allow(GithubService).to receive(:contributors).and_return(JSON.parse(File.read('./tmp/github_contributors_response_body.txt'), symbolize_names: true))
     # allow(GithubService).to receive(:pull_requests).and_return(JSON.parse(File.read('./tmp/github_pull_requests_response_body.txt'), symbolize_names: true))
-    ## Repo Name
-    stub_request(:any, "https://api.github.com/repos/Sierra-T-9598/little-esty-shop").to_return(body: File.read('./tmp/github_repo_response_body.txt'), status: 200)
-    ## Contributors
-    stub_request(:any, "https://api.github.com/repos/Sierra-T-9598/little-esty-shop/contributors").to_return(body: File.read('./tmp/github_contributors_response_body.txt'), status: 200)
-    ## Commits
-    stub_request(:any, "https://api.github.com/repos/Sierra-T-9598/little-esty-shop/commits?per_page=100").to_return(body: File.read('./tmp/github_commits_response_body.txt'), status: 200)
-    ## Pull Requests
-    stub_request(:any, "https://api.github.com/repos/Sierra-T-9598/little-esty-shop/pulls?state=closed&per_page=100").to_return(body: File.read('./tmp/github_pull_requests_response_body.txt'), status: 200)
 
-    stub_request(:any, "https://date.nager.at/api/v2/NextPublicHolidays/us").to_return(body: File.read('./spec/support/holiday_api_response/holiday_next_365_day_repsonse.json'), status: 200)
+    ### Functioning API Request Stubs
+
+    ## Repo Name
+    # stub_request(:any, "https://api.github.com/repos/Sierra-T-9598/little-esty-shop").to_return(body: File.read('./tmp/github_repo_response_body.txt'), status: 200)
+    # ## Contributors
+    # stub_request(:any, "https://api.github.com/repos/Sierra-T-9598/little-esty-shop/contributors").to_return(body: File.read('./tmp/github_contributors_response_body.txt'), status: 200)
+    # ## Commits
+    # stub_request(:any, "https://api.github.com/repos/Sierra-T-9598/little-esty-shop/commits?per_page=100").to_return(body: File.read('./tmp/github_commits_response_body.txt'), status: 200)
+    # ## Pull Requests
+    # stub_request(:any, "https://api.github.com/repos/Sierra-T-9598/little-esty-shop/pulls?state=closed&per_page=100").to_return(body: File.read('./tmp/github_pull_requests_response_body.txt'), status: 200)
+    #
+    # stub_request(:any, "https://date.nager.at/api/v2/NextPublicHolidays/us").to_return(body: File.read('./spec/support/holiday_api_response/holiday_next_365_day_repsonse.json'), status: 200)
   end
 
   # You can uncomment this line to turn off ActiveRecord support entirely.
